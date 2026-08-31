@@ -1,1 +1,1095 @@
-# kavya-birthday
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Special Surprise! 🎁</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+      padding: 20px 15px;
+      color: #2c3e50;
+    }
+
+    /* Floating Balloons Background */
+    #balloon-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    /* Dynamic Balloon Styles */
+    .balloon {
+      position: absolute;
+      bottom: -120px;
+      opacity: 0.9;
+      animation: floatUp linear forwards;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    
+    .balloon-classic {
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+    }
+    .balloon-classic::after {
+      content: "";
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 18px;
+      background: rgba(0,0,0,0.4);
+    }
+    
+    .balloon-heart {
+      background: currentColor;
+      transform: rotate(-45deg);
+    }
+    .balloon-heart::before,
+    .balloon-heart::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      border-radius: 50%;
+    }
+    .balloon-heart::before {
+      top: -50%;
+      left: 0;
+    }
+    .balloon-heart::after {
+      left: 50%;
+      top: 0;
+    }
+
+    .balloon-star {
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-120vh) rotate(20deg);
+        opacity: 1;
+      }
+    }
+
+    /* Main Content Wrapper (No Box Layout) */
+    .content-wrapper {
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+      z-index: 10;
+      position: relative;
+    }
+
+    .main-title {
+      font-family: 'Pacifico', cursive;
+      color: #ff3366;
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Styling for the 300-word paragraph with unique mixed typography */
+    .wishing-paragraph {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #333;
+      text-align: left;
+      margin-bottom: 30px;
+      padding: 10px;
+    }
+    .wishing-paragraph .highlight-name {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.6rem;
+      color: #ff0055;
+    }
+    .wishing-paragraph .accent-text {
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      color: #8a2be2;
+      font-weight: bold;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      width: 85%;
+      padding: 16px 25px;
+      background: linear-gradient(45deg, #ff4b2b, #ff416c);
+      color: #ffffff;
+      border: none;
+      border-radius: 35px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 75, 43, 0.4);
+      transition: transform 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      margin: 20px 0;
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Dynamic Display Sections */
+    #birthday-section, #gift-box-section {
+      display: none;
+    }
+
+    /* Gift Box Styling */
+    .gift-box-wrapper {
+      margin: 40px auto;
+      width: 110px;
+      height: 110px;
+      position: relative;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .gift-box {
+      width: 100%;
+      height: 100%;
+      background: #ff4b2b;
+      border-radius: 14px;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    .gift-lid {
+      width: 112%;
+      height: 28px;
+      background: #ff2a00;
+      position: absolute;
+      top: -12px;
+      left: -6%;
+      border-radius: 8px;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 3.5s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 2;
+    }
+    .ribbon-v {
+      width: 20px;
+      height: 100%;
+      background: #ffd700;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .ribbon-h {
+      height: 20px;
+      width: 100%;
+      background: #ffd700;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Opening Lid Animation */
+    .opening .gift-lid {
+      transform: translateY(-120px) rotate(-35deg);
+    }
+
+    /* Canvas for Particles */
+    #effect-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="effect-canvas"></canvas>
+  <div id="balloon-container"></div>
+
+  <div class="content-wrapper">
+    <!-- Section 1: Front Welcome Screen -->
+    <div id="front-section">
+      <h1 class="main-title">A Special Surprise! ✨</h1>
+      <p style="font-size: 1.1rem; margin-bottom: 20px;">Someone very special has a surprise waiting for them...</p>
+      <button class="btn" id="main-btn" onclick="handleMainAction(event)">Click to Wish Happy Birthday! 🎁</button>
+    </div>
+
+    <!-- Section 2: Birthday Wishing Paragraph (Appears on click) -->
+    <div id="birthday-section">
+      <h1 class="main-title">Happy Birthday! 🎂✨</h1>
+      
+      <div class="wishing-paragraph" id="scroll-target">
+        Today is all about celebrating the incredible presence of <span class="highlight-name">Kavya</span>! 🥳🎉 Having a friend like you makes every single day infinitely brighter and full of joy. <span class="accent-text">From late-night conversations to endless giggles,</span> every moment shared with you is a cherished memory in the making. 🌟💫 You possess this unique ability to bring light into every room you step into, spreading warmth, kindness, and positivity wherever you go. 💖😊 
+        <br><br>
+        On your special day, <span class="accent-text">I want you to know how deeply appreciated you are</span> for being the genuine, compassionate, and wonderful soul that you are. 🌸🌺 May this new chapter of your life unlock infinite opportunities, immense success, and endless reasons to keep smiling your beautiful smile. 🥂✨ <span class="highlight-name">Kavya</span>, you deserve all the love, magic, and happiness the universe has to offer. 🌈🎁 
+        <br><br>
+        Never stop reaching for the stars because you are destined for greatness. <span class="accent-text">May your year ahead be packed with unforgettable adventures,</span> delicious food, sweet surprises, and unforgettable moments surrounded by those who adore you most. 🎂🎈 Thank you for being such an extraordinary friend and for simply being you. Happy Birthday once again to the sweetest person ever! 🥳💖✨
+      </div>
+
+      <button class="btn" onclick="showGiftSection(event)">Gift For You 🎁</button>
+    </div>
+
+    <!-- Section 3: One-Time Interactive Gift Box -->
+    <div id="gift-box-section">
+      <h1 class="main-title">Your Birthday Gift! 🎁</h1>
+      <p id="gift-status" style="font-size: 1.1rem; margin-bottom: 15px;">Tap the box to unlock your surprise!</p>
+      
+      <div class="gift-box-wrapper" id="gift-box-element" onclick="openGiftBox(event)">
+        <div class="gift-box">
+          <div class="gift-lid"></div>
+          <div class="ribbon-v"></div>
+          <div class="ribbon-h"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Audio File -->
+  <audio id="birthdaySong" src="/storage/emulated/0/Download/VN20260829_131515.mp3" preload="auto" loop></audio>
+
+  <script>
+    let isOpened = false;
+    let audioCtx = null;
+
+    // Web Audio Synthesizer Setup for high volume sound effects & backup instrumental
+    function initAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // High Volume Pop Sound Generator
+    function playPopSound() {
+      initAudioContext();
+      if (!audioCtx) return;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.08);
+
+      // Volume set to maximum (100%)
+      gain.gain.setValueAtTime(1.0, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.08);
+    }
+
+    // Instrumental Birthday Song Fallback Synthesizer (Continuous Loop)
+    function playInstrumentalMusic() {
+      initAudioContext();
+      if (!audioCtx) return;
+
+      const notes = [
+        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 293.66, d: 0.8 }, { f: 261.63, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 329.63, d: 1.2 },
+        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 293.66, d: 0.8 }, { f: 261.63, d: 0.8 }, { f: 392.00, d: 0.8 }, { f: 349.23, d: 1.2 },
+        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 523.25, d: 0.8 }, { f: 440.00, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 329.63, d: 0.8 }, { f: 293.66, d: 0.8 },
+        { f: 466.16, d: 0.4 }, { f: 466.16, d: 0.4 }, { f: 440.00, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 392.00, d: 0.8 }, { f: 349.23, d: 1.2 }
+      ];
+
+      let now = audioCtx.currentTime;
+      let durationTotal = 0;
+
+      notes.forEach((note) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(note.f, now + durationTotal);
+
+        gain.gain.setValueAtTime(0.8, now + durationTotal);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + durationTotal + note.d - 0.05);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now + durationTotal);
+        osc.stop(now + durationTotal + note.d);
+
+        durationTotal += note.d;
+      });
+
+      // Continuous loop of instrumental music
+      setTimeout(() => {
+        playInstrumentalMusic();
+      }, durationTotal * 1000);
+    }
+
+    // Click Particle Spark Effect
+    function triggerSparksAt(x, y) {
+      const canvas = document.getElementById('effect-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const sparks = [];
+      const colors = ['#ff0055', '#ffd700', '#00ffff', '#ff4b2b', '#ffffff', '#8a2be2'];
+
+      for (let i = 0; i < 35; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 8 + 2;
+        sparks.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: Math.random() * 5 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          opacity: 1
+        });
+      }
+
+      function animateSparks() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = false;
+
+        sparks.forEach((p) => {
+          if (p.opacity > 0) {
+            active = true;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.opacity -= 0.03;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(p.opacity, 0);
+            ctx.fill();
+          }
+        });
+
+        if (active) {
+          requestAnimationFrame(animateSparks);
+        }
+      }
+      animateSparks();
+    }
+
+    // Trigger Music, Slow Auto-Scroll, and Reveal Wishing Text
+    function handleMainAction(e) {
+      if (e) {
+        triggerSparksAt(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+      }
+      playPopSound();
+
+      document.getElementById('front-section').style.display = 'none';
+      document.getElementById('birthday-section').style.display = 'block';
+
+      // Play background song at full volume
+      const song = document.getElementById('birthdaySong');
+      song.volume = 1.0;
+      song.play().catch(err => {
+        console.log("Audio file auto-play prevented, starting backup instrumental synth: " + err);
+        playInstrumentalMusic();
+      });
+
+      startContinuousBalloons();
+      slowAutoScroll();
+    }
+
+    // Very Slow Smooth Auto-Scroll Effect
+    function slowAutoScroll() {
+      let currentScroll = 0;
+      const scrollInterval = setInterval(() => {
+        if (currentScroll < document.body.scrollHeight - window.innerHeight) {
+          currentScroll += 1;
+          window.scrollTo({
+            top: currentScroll,
+            behavior: 'smooth'
+          });
+        } else {
+          clearInterval(scrollInterval);
+        }
+      }, 50); // Controls the slow scrolling speed
+    }
+
+    // Switch to Gift Screen
+    function showGiftSection(e) {
+      if (e) {
+        triggerSparksAt(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+      }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Special Surprise! 🎁</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Fredoka:wght@400;600&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      position: relative;
+      padding: 20px 15px;
+      color: #2c3e50;
+    }
+
+    /* Floating Balloons Background */
+    #balloon-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    /* Dynamic Balloon Styles */
+    .balloon {
+      position: absolute;
+      bottom: -120px;
+      opacity: 0.9;
+      animation: floatUp linear forwards;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    
+    .balloon-classic {
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+    }
+    .balloon-classic::after {
+      content: "";
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 18px;
+      background: rgba(0,0,0,0.4);
+    }
+    
+    .balloon-heart {
+      background: currentColor;
+      transform: rotate(-45deg);
+    }
+    .balloon-heart::before,
+    .balloon-heart::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      border-radius: 50%;
+    }
+    .balloon-heart::before {
+      top: -50%;
+      left: 0;
+    }
+    .balloon-heart::after {
+      left: 50%;
+      top: 0;
+    }
+
+    .balloon-star {
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-120vh) rotate(20deg);
+        opacity: 1;
+      }
+    }
+
+    /* Main Content Wrapper (No Box Layout) */
+    .content-wrapper {
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+      z-index: 10;
+      position: relative;
+    }
+
+    .main-title {
+      font-family: 'Pacifico', cursive;
+      color: #ff3366;
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Styling for the 300-word paragraph with unique mixed typography */
+    .wishing-paragraph {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #333;
+      text-align: left;
+      margin-bottom: 30px;
+      padding: 10px;
+    }
+    .wishing-paragraph .highlight-name {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.6rem;
+      color: #ff0055;
+    }
+    .wishing-paragraph .accent-text {
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      color: #8a2be2;
+      font-weight: bold;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      width: 85%;
+      padding: 16px 25px;
+      background: linear-gradient(45deg, #ff4b2b, #ff416c);
+      color: #ffffff;
+      border: none;
+      border-radius: 35px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(255, 75, 43, 0.4);
+      transition: transform 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      margin: 20px 0;
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Dynamic Display Sections */
+    #birthday-section, #gift-box-section {
+      display: none;
+    }
+
+    /* Gift Box Styling */
+    .gift-box-wrapper {
+      margin: 40px auto;
+      width: 110px;
+      height: 110px;
+      position: relative;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .gift-box {
+      width: 100%;
+      height: 100%;
+      background: #ff4b2b;
+      border-radius: 14px;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    .gift-lid {
+      width: 112%;
+      height: 28px;
+      background: #ff2a00;
+      position: absolute;
+      top: -12px;
+      left: -6%;
+      border-radius: 8px;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 3.5s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 2;
+    }
+    .ribbon-v {
+      width: 20px;
+      height: 100%;
+      background: #ffd700;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .ribbon-h {
+      height: 20px;
+      width: 100%;
+      background: #ffd700;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Opening Lid Animation */
+    .opening .gift-lid {
+      transform: translateY(-120px) rotate(-35deg);
+    }
+
+    /* Canvas for Particles */
+    #effect-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="effect-canvas"></canvas>
+  <div id="balloon-container"></div>
+
+  <div class="content-wrapper">
+    <!-- Section 1: Front Welcome Screen -->
+    <div id="front-section">
+      <h1 class="main-title">A Special Surprise! ✨</h1>
+      <p style="font-size: 1.1rem; margin-bottom: 20px;">Someone very special has a surprise waiting for them...</p>
+      <button class="btn" id="main-btn" onclick="handleMainAction(event)">Click to Wish Happy Birthday! 🎁</button>
+    </div>
+
+    <!-- Section 2: Birthday Wishing Paragraph (Appears on click) -->
+    <div id="birthday-section">
+      <h1 class="main-title">Happy Birthday! 🎂✨</h1>
+      
+      <div class="wishing-paragraph" id="scroll-target">
+        Today is all about celebrating the incredible presence of <span class="highlight-name">Kavya</span>! 🥳🎉 Having a friend like you makes every single day infinitely brighter and full of joy. <span class="accent-text">From late-night conversations to endless giggles,</span> every moment shared with you is a cherished memory in the making. 🌟💫 You possess this unique ability to bring light into every room you step into, spreading warmth, kindness, and positivity wherever you go. 💖😊 
+        <br><br>
+        On your special day, <span class="accent-text">I want you to know how deeply appreciated you are</span> for being the genuine, compassionate, and wonderful soul that you are. 🌸🌺 May this new chapter of your life unlock infinite opportunities, immense success, and endless reasons to keep smiling your beautiful smile. 🥂✨ <span class="highlight-name">Kavya</span>, you deserve all the love, magic, and happiness the universe has to offer. 🌈🎁 
+        <br><br>
+        Never stop reaching for the stars because you are destined for greatness. <span class="accent-text">May your year ahead be packed with unforgettable adventures,</span> delicious food, sweet surprises, and unforgettable moments surrounded by those who adore you most. 🎂🎈 Thank you for being such an extraordinary friend and for simply being you. Happy Birthday once again to the sweetest person ever! 🥳💖✨
+      </div>
+
+      <button class="btn" onclick="showGiftSection(event)">Gift For You 🎁</button>
+    </div>
+
+    <!-- Section 3: One-Time Interactive Gift Box -->
+    <div id="gift-box-section">
+      <h1 class="main-title">Your Birthday Gift! 🎁</h1>
+      <p id="gift-status" style="font-size: 1.1rem; margin-bottom: 15px;">Tap the box to unlock your surprise!</p>
+      
+      <div class="gift-box-wrapper" id="gift-box-element" onclick="openGiftBox(event)">
+        <div class="gift-box">
+          <div class="gift-lid"></div>
+          <div class="ribbon-v"></div>
+          <div class="ribbon-h"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Background Audio File -->
+  <audio id="birthdaySong" src="/storage/emulated/0/Download/VN20260829_131515.mp3" preload="auto" loop></audio>
+
+  <script>
+    let isOpened = false;
+    let audioCtx = null;
+
+    // Web Audio Synthesizer Setup for high volume sound effects & backup instrumental
+    function initAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    // High Volume Pop Sound Generator
+    function playPopSound() {
+      initAudioContext();
+      if (!audioCtx) return;
+
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.08);
+
+      // Volume set to maximum (100%)
+      gain.gain.setValueAtTime(1.0, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.08);
+    }
+
+    // Instrumental Birthday Song Fallback Synthesizer (Continuous Loop)
+    function playInstrumentalMusic() {
+      initAudioContext();
+      if (!audioCtx) return;
+
+      const notes = [
+        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 293.66, d: 0.8 }, { f: 261.63, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 329.63, d: 1.2 },
+        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 293.66, d: 0.8 }, { f: 261.63, d: 0.8 }, { f: 392.00, d: 0.8 }, { f: 349.23, d: 1.2 },
+        { f: 261.63, d: 0.4 }, { f: 261.63, d: 0.4 }, { f: 523.25, d: 0.8 }, { f: 440.00, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 329.63, d: 0.8 }, { f: 293.66, d: 0.8 },
+        { f: 466.16, d: 0.4 }, { f: 466.16, d: 0.4 }, { f: 440.00, d: 0.8 }, { f: 349.23, d: 0.8 }, { f: 392.00, d: 0.8 }, { f: 349.23, d: 1.2 }
+      ];
+
+      let now = audioCtx.currentTime;
+      let durationTotal = 0;
+
+      notes.forEach((note) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(note.f, now + durationTotal);
+
+        gain.gain.setValueAtTime(0.8, now + durationTotal);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + durationTotal + note.d - 0.05);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(now + durationTotal);
+        osc.stop(now + durationTotal + note.d);
+
+        durationTotal += note.d;
+      });
+
+      // Continuous loop of instrumental music
+      setTimeout(() => {
+        playInstrumentalMusic();
+      }, durationTotal * 1000);
+    }
+
+    // Click Particle Spark Effect
+    function triggerSparksAt(x, y) {
+      const canvas = document.getElementById('effect-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const sparks = [];
+      const colors = ['#ff0055', '#ffd700', '#00ffff', '#ff4b2b', '#ffffff', '#8a2be2'];
+
+      for (let i = 0; i < 35; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 8 + 2;
+        sparks.push({
+          x: x,
+          y: y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: Math.random() * 5 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          opacity: 1
+        });
+      }
+
+      function animateSparks() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = false;
+
+        sparks.forEach((p) => {
+          if (p.opacity > 0) {
+            active = true;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.opacity -= 0.03;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(p.opacity, 0);
+            ctx.fill();
+          }
+        });
+
+        if (active) {
+          requestAnimationFrame(animateSparks);
+        }
+      }
+      animateSparks();
+    }
+
+    // Trigger Music, Slow Auto-Scroll, and Reveal Wishing Text
+    function handleMainAction(e) {
+      if (e) {
+        triggerSparksAt(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+      }
+      playPopSound();
+
+      document.getElementById('front-section').style.display = 'none';
+      document.getElementById('birthday-section').style.display = 'block';
+
+      // Play background song at full volume
+      const song = document.getElementById('birthdaySong');
+      song.volume = 1.0;
+      song.play().catch(err => {
+        console.log("Audio file auto-play prevented, starting backup instrumental synth: " + err);
+        playInstrumentalMusic();
+      });
+
+      startContinuousBalloons();
+      slowAutoScroll();
+    }
+
+    // Very Slow Smooth Auto-Scroll Effect
+    function slowAutoScroll() {
+      let currentScroll = 0;
+      const scrollInterval = setInterval(() => {
+        if (currentScroll < document.body.scrollHeight - window.innerHeight) {
+          currentScroll += 1;
+          window.scrollTo({
+            top: currentScroll,
+            behavior: 'smooth'
+          });
+        } else {
+          clearInterval(scrollInterval);
+        }
+      }, 50); // Controls the slow scrolling speed
+    }
+
+    // Switch to Gift Screen
+    function showGiftSection(e) {
+      if (e) {
+        triggerSparksAt(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+      }
+      playPopSound();
+
+      document.getElementById('birthday-section').style.display = 'none';
+      document.getElementById('gift-box-section').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Continuous Balloon Show with Various Shapes, Sizes, and Auto-Popping
+    function startContinuousBalloons() {
+      const container = document.getElementById('balloon-container');
+      const colors = ['#ff4b2b', '#ff416c', '#ffb6c1', '#ffd700', '#4caf50', '#00bcd4', '#9c27b0', '#ff9800'];
+      const shapes = ['balloon-classic', 'balloon-heart', 'balloon-star'];
+
+      setInterval(() => {
+        const balloon = document.createElement('div');
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const size = Math.floor(Math.random() * 35) + 35; // 35px to 70px
+
+        balloon.className = `balloon ${shape}`;
+        balloon.style.width = size + 'px';
+        balloon.style.height = (shape === 'balloon-classic' ? size * 1.35 : size) + 'px';
+        balloon.style.left = Math.random() * 90 + 'vw';
+        balloon.style.color = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.backgroundColor = balloon.style.color;
+
+        const duration = Math.random() * 4 + 6;
+        balloon.style.animationDuration = duration + 's';
+
+        container.appendChild(balloon);
+
+        // Auto Balloon Pop Timing
+        const popDelay = (Math.random() * (duration - 2) + 1.5) * 1000;
+        setTimeout(() => {
+          if (balloon.parentNode) {
+            const rect = balloon.getBoundingClientRect();
+            triggerSparksAt(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            playPopSound();
+            balloon.remove();
+          }
+        }, popDelay);
+
+        // Cleanup out-of-bounds balloons
+        setTimeout(() => {
+          if (balloon.parentNode) {
+            balloon.remove();
+          }
+        }, duration * 1000);
+
+      }, 450); // Generates balloons endlessly
+    }
+
+    // Single-Use Slow Lid Opening & Chocolate Particle Blast
+    function openGiftBox(e) {
+      if (e) {
+        triggerSparksAt(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+      }
+      playPopSound();
+
+      if (isOpened) return; // Restricts action to one time only
+      isOpened = true;
+
+      const giftElement = document.getElementById('gift-box-element');
+      const statusText = document.getElementById('gift-status');
+
+      giftElement.classList.add('opening');
+      statusText.innerText = "Opening your sweet surprise... ✨";
+
+      // Extended opening duration before chocolates explosion
+      setTimeout(() => {
+        statusText.innerText = "Enjoy all your chocolates! 🍫💖";
+        triggerChocolateExplosion();
+      }, 2000);
+    }
+
+    // Full Screen Canvas Explosion of Chocolates, Hearts, & Sparkles
+    function triggerChocolateExplosion() {
+      const canvas = document.getElementById('effect-canvas');
+      const ctx = canvas.getContext('2d');
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const symbols = ['🍫', '🍬', '🍩', '💖', '✨', '⭐', '🎂'];
+
+      for (let i = 0; i < 75; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          symbol: symbols[Math.floor(Math.random() * symbols.length)],
+          vx: (Math.random() - 0.5) * 14,
+          vy: (Math.random() - 0.7) * 16,
+          gravity: 0.15,
+          size: Math.random() * 18 + 22,
+          opacity: 1,
+          rotation: Math.random() * 360,
+          vRot: (Math.random() - 0.5) * 8
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let liveParticles = false;
+
+        particles.forEach((p) => {
+          if (p.opacity > 0) {
+            liveParticles = true;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.gravity;
+            p.opacity -= 0.005; // Extended fade duration
+            p.rotation += p.vRot;
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(p.opacity, 0);
+            ctx.font = `${p.size}px serif`;
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillText(p.symbol, -p.size / 2, p.size / 2);
+            ctx.restore();
+          }
+        });
+
+        if (liveParticles) {
+          requestAnimationFrame(animate);
+        }
+      }
+
+      animate();
+    }
+  </script>
+</body>
+</html>
+      playPopSound();
+
+      document.getElementById('birthday-section').style.display = 'none';
+      document.getElementById('gift-box-section').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Continuous Balloon Show with Various Shapes, Sizes, and Auto-Popping
+    function startContinuousBalloons() {
+      const container = document.getElementById('balloon-container');
+      const colors = ['#ff4b2b', '#ff416c', '#ffb6c1', '#ffd700', '#4caf50', '#00bcd4', '#9c27b0', '#ff9800'];
+      const shapes = ['balloon-classic', 'balloon-heart', 'balloon-star'];
+
+      setInterval(() => {
+        const balloon = document.createElement('div');
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const size = Math.floor(Math.random() * 35) + 35; // 35px to 70px
+
+        balloon.className = `balloon ${shape}`;
+        balloon.style.width = size + 'px';
+        balloon.style.height = (shape === 'balloon-classic' ? size * 1.35 : size) + 'px';
+        balloon.style.left = Math.random() * 90 + 'vw';
+        balloon.style.color = colors[Math.floor(Math.random() * colors.length)];
+        balloon.style.backgroundColor = balloon.style.color;
+
+        const duration = Math.random() * 4 + 6;
+        balloon.style.animationDuration = duration + 's';
+
+        container.appendChild(balloon);
+
+        // Auto Balloon Pop Timing
+        const popDelay = (Math.random() * (duration - 2) + 1.5) * 1000;
+        setTimeout(() => {
+          if (balloon.parentNode) {
+            const rect = balloon.getBoundingClientRect();
+            triggerSparksAt(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            playPopSound();
+            balloon.remove();
+          }
+        }, popDelay);
+
+        // Cleanup out-of-bounds balloons
+        setTimeout(() => {
+          if (balloon.parentNode) {
+            balloon.remove();
+          }
+        }, duration * 1000);
+
+      }, 450); // Generates balloons endlessly
+    }
+
+    // Single-Use Slow Lid Opening & Chocolate Particle Blast
+    function openGiftBox(e) {
+      if (e) {
+        triggerSparksAt(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
+      }
+      playPopSound();
+
+      if (isOpened) return; // Restricts action to one time only
+      isOpened = true;
+
+      const giftElement = document.getElementById('gift-box-element');
+      const statusText = document.getElementById('gift-status');
+
+      giftElement.classList.add('opening');
+      statusText.innerText = "Opening your sweet surprise... ✨";
+
+      // Extended opening duration before chocolates explosion
+      setTimeout(() => {
+        statusText.innerText = "Enjoy all your chocolates! 🍫💖";
